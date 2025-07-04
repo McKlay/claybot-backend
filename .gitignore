@@ -14,7 +14,7 @@ venv/
 *.swp
 
 # README.md Files
-project_readmes/
+project_readmes/*.md
 
 # OS
 .DS_Store
