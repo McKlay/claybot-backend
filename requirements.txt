@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+openai
+supabase
+python-dotenv
+tqdm
+httpx
+requests
+numpy
+tiktoken
