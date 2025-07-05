@@ -1,52 +1,124 @@
-# ClayBot Backend
+# 🤖 ClayBot Backend
 
-This is the backend API for Clay Sarte's portfolio chatbot (ClayBot), built using FastAPI, Supabase pgvector, and OpenAI embeddings.
+This is the backend API for **Clay Sarte's portfolio chatbot (ClayBot)** — built using:
+
+- OpenAI GPT-3.5 + Embeddings (`text-embedding-3-small`)
+- Supabase with `pgvector` for vector storage & similarity search
+- FastAPI for REST API endpoints
+- Docker for deployment to Render
+
+---
+
+## 💡 How the Whole Flow Works
+
+### Architectural Flow (RAG with GPT)
+
+#### 1. PREPROCESSING (One-time):
+Your Text Content → **Embedding Model** (`text-embedding-3-small`)  
+→ Store vectors + original text in **Supabase**
+
+#### 2. AT RUNTIME (User asks question):
+User Question → Embed → Vector  
+→ Similarity Search in Supabase → Top Matching Chunks  
+→ Combine chunks + user question → GPT-3.5 prompt  
+→ GPT-3.5 returns natural-language answer
+
+---
 
 ## Features
 
-- Embeds Markdown content using `text-embedding-3-small`
-- Stores vectors in Supabase `documents` table
-- Retrieves top-k chunks using pgvector similarity
-- Serves chatbot via `/chat` endpoint
-- Dockerized for easy deployment to Render
+- Embeds Markdown project descriptions into vector form
+- Stores in `documents` table using `pgvector` for similarity search
+- Supports `/chat` endpoint for real-time questions
+- Uses OpenAI GPT-3.5 Turbo for answer generation
+- Dockerized for easy deployment via Render
+- CORS-restricted to Netlify frontend (`clay-portfolio.netlify.app`)
+- Includes `/healthz` endpoint for uptime monitoring
+
+---
 
 ## Folder Structure
 
-```bash
+```
 
 chatbot-backend/
 ├── app/
-│   ├── main.py           # FastAPI app
+│   ├── main.py           # FastAPI entrypoint + CORS + health check
 │   ├── routes.py         # /chat and /embed endpoints
-│   ├── vectorstore.py    # Supabase + pgvector logic
-│   ├── openai\_utils.py   # Embedding + chat helper
-│   └── data\_loader.py    # Load + embed markdown files
+│   ├── vectorstore.py    # Supabase + pgvector search and storage
+│   ├── openai_utils.py   # GPT & embedding API helpers
+│   └── data_loader.py    # Chunk + embed all markdown files
 ├── requirements.txt
 ├── Dockerfile
 ├── .gitignore
 └── README.md
 
-```
+````
+
+---
 
 ## Deployment (Render)
 
-1. Push repo to GitHub
-2. Create new **Web Service** on [Render](https://render.com)
-3. Select this repo → Docker → Python 3.10
+1. Push this repo to GitHub
+2. Create a new **Web Service** on [Render](https://render.com)
+3. Select this repo → Choose **Docker** → Python 3.10
 4. Set environment variables:
-   - `OPENAI_API_KEY`
-   - `SUPABASE_URL`
-   - `SUPABASE_KEY`
-5. Done — Render will build and host your API
 
-## 🔗 Endpoints
-```bash
+```env
+OPENAI_API_KEY=sk-...
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-supabase-service-role-key
+````
 
-| Route    | Method | Description                       |
-|----------|--------|-----------------------------------|
-| `/chat`  | POST   | Query chatbot with user message   |
-| `/embed` | POST   | (Optional) Embed new content      |
+5. Click **Deploy Web Service**
 
+> Your backend will be live at:
+> `https://claybot-backend.onrender.com`
+
+---
+
+## API Endpoints
+
+| Route      | Method | Description                               |
+| ---------- | ------ | ----------------------------------------- |
+| `/chat`    | POST   | Accepts a `message`, returns GPT reply    |
+| `/embed`   | POST   | (Optional) Embed additional text chunks   |
+| `/healthz` | GET    | Uptime monitor ping (returns status OK)   |
+| `/`        | GET    | Suppresses Render 404 logs with simple OK |
+
+---
+
+## CORS
+
+This backend only accepts requests from:
+
+```
+https://clay-portfolio.netlify.app
+```
+
+Defined in `main.py` using:
+
+```python
+allow_origin_regex=r"https:\/\/clay-portfolio\.netlify\.app"
 ```
 
 ---
+
+## Tech Stack
+
+| Layer     | Tool                            |
+| --------- | ------------------------------- |
+| Backend   | FastAPI                         |
+| LLM       | OpenAI GPT-3.5 Turbo            |
+| Embedding | OpenAI `text-embedding-3-small` |
+| Vector DB | Supabase + pgvector             |
+| Hosting   | Render (Dockerized Web Service) |
+
+---
+
+## ✅ Status
+
+ClayBot is now fully live and integrated into Clay's personal portfolio:
+🔗 [`https://clay-portfolio.netlify.app`](https://clay-portfolio.netlify.app)
+
+```
