@@ -8,14 +8,24 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS settings (adjust allow_origins before production!)
+# ✅ CORS settings — secure and production-ready for Netlify
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # TODO: Replace with your Netlify domain later
+    allow_origin_regex=r"https:\/\/clay-portfolio\.netlify\.app",  # ✅ only allow Netlify frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Include all routes from routes.py
+# ✅ Health check for uptime services (e.g., UptimeRobot)
+@app.get("/healthz")
+def health():
+    return {"status": "ok"}
+
+# ✅ Minimal root response (to suppress Render 404 logs)
+@app.get("/")
+async def root():
+    return {"status": "ClayBot backend is live."}
+
+# ✅ Include chatbot routes
 app.include_router(chatbot_router)
