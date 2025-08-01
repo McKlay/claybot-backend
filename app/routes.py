@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 from app.openai_utils import get_chat_response
 from app.vectorstore import embed_and_store_text, query_vectorstore
+from fastapi.responses import Response
 
 router = APIRouter()
 
@@ -36,3 +37,8 @@ async def embed(request: EmbedRequest):
         return {"success": success}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# ✅ OPTIONS handler to fix CORS preflight error
+@router.options("/chat")
+async def options_chat():
+    return Response(status_code=204)
