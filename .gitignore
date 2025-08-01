@@ -15,6 +15,7 @@ venv/
 
 # README.md Files
 project_readmes/*.md
+!project_readmes/.gitkeep
 
 # OS
 .DS_Store
