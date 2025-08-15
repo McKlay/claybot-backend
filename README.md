@@ -72,8 +72,7 @@ SUPABASE_KEY=your-supabase-service-role-key
 
 5. Click **Deploy Web Service**
 
-> Your backend will be live at:
-> `https://claybot-backend.onrender.com`
+> Your backend will be live.
 
 ---
 
@@ -118,7 +117,7 @@ allow_origin_regex=r"https:\/\/clay-portfolio\.netlify\.app"
 
 ## ✅ Status
 
-ClayBot is now fully live and integrated into Clay's personal portfolio:
+ClayBot is now fully live and integrated into Clay's personal portfolio:  
 🔗 [`https://clay-portfolio.netlify.app`](https://clay-portfolio.netlify.app)
 
 ```
