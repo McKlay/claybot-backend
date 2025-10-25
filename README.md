@@ -20,8 +20,8 @@ Your Text Content → **Embedding Model** (`text-embedding-3-small`)
 #### 2. AT RUNTIME (User asks question):
 User Question → Embed → Vector  
 → Similarity Search in Supabase → Top Matching Chunks  
-→ Combine chunks + user question → GPT-5-nano prompt  
-→ GPT-3.5 returns natural-language answer
+→ Combine chunks + user question → gpt-5-nano prompt  
+→ gpt-5-nano returns natural-language answer
 
 ---
 
