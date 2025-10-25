@@ -27,10 +27,12 @@ User Question → Embed → Vector
 
 ## Features
 
+- **Multi-turn Conversations**: Maintains conversation context using LangChain memory
+- **Session Management**: Supports multiple independent conversation sessions
 - Embeds Markdown project descriptions into vector form
 - Stores in `documents` table using `pgvector` for similarity search
-- Supports `/chat` endpoint for real-time questions
-- Uses OpenAI gpt-5-nano for answer generation
+- Supports `/chat` endpoint for real-time questions with conversation history
+- Uses OpenAI gpt-4o-mini for answer generation with context retention
 - Dockerized for easy deployment via Render
 - CORS-restricted to Netlify frontend (`clay-portfolio.netlify.app`)
 - Includes `/healthz` endpoint for uptime monitoring
@@ -48,6 +50,7 @@ chatbot-backend/
 │   ├── vectorstore.py    # Supabase + pgvector search and storage
 │   ├── openai_utils.py   # GPT & embedding API helpers
 │   └── data_loader.py    # Chunk + embed all markdown files
+|── app/                  # Documention markdown files
 ├── requirements.txt
 ├── Dockerfile
 ├── .gitignore
@@ -78,12 +81,46 @@ SUPABASE_KEY=your-supabase-service-role-key
 
 ## API Endpoints
 
-| Route      | Method | Description                               |
-| ---------- | ------ | ----------------------------------------- |
-| `/chat`    | POST   | Accepts a `message`, returns GPT reply    |
-| `/embed`   | POST   | (Optional) Embed additional text chunks   |
-| `/healthz` | GET    | Uptime monitor ping (returns status OK)   |
-| `/`        | GET    | Suppresses Render 404 logs with simple OK |
+| Route            | Method | Description                                          |
+| ---------------- | ------ | ---------------------------------------------------- |
+| `/chat`          | POST   | Accepts a `message` and `session_id`, returns GPT reply with context |
+| `/clear-history` | POST   | Clears conversation history for a specific session   |
+| `/embed`         | POST   | (Optional) Embed additional text chunks              |
+| `/healthz`       | GET    | Uptime monitor ping (returns status OK)              |
+| `/`              | GET    | Suppresses Render 404 logs with simple OK            |
+
+### `/chat` Endpoint
+
+**Request:**
+```json
+{
+  "message": "What projects has Clay worked on?",
+  "session_id": "unique-session-id"  // Optional, defaults to "default"
+}
+```
+
+**Response:**
+```json
+{
+  "response": "Clay has worked on several projects including..."
+}
+```
+
+### `/clear-history` Endpoint
+
+**Request:**
+```
+POST /clear-history?session_id=your-session-id
+```
+
+**Response:**
+```json
+{
+  "message": "Conversation history cleared for session: your-session-id"
+}
+```
+
+For detailed information about multi-turn conversations, see [MULTITURN_GUIDE.md](MULTITURN_GUIDE.md).
 
 ---
 
@@ -105,13 +142,14 @@ allow_origin_regex=r"https:\/\/clay-portfolio\.netlify\.app"
 
 ## Tech Stack
 
-| Layer     | Tool                            |
-| --------- | ------------------------------- |
-| Backend   | FastAPI                         |
-| LLM       | OpenAI gpt-5-nano            |
-| Embedding | OpenAI `text-embedding-3-small` |
-| Vector DB | Supabase + pgvector             |
-| Hosting   | Render (Dockerized Web Service) |
+| Layer                | Tool                            |
+| -------------------- | ------------------------------- |
+| Backend              | FastAPI                         |
+| LLM                  | OpenAI gpt-4o-mini              |
+| Conversation Memory  | LangChain                       |
+| Embedding            | OpenAI `text-embedding-3-small` |
+| Vector DB            | Supabase + pgvector             |
+| Hosting              | Render (Dockerized Web Service) |
 
 ---
 
