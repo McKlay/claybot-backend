@@ -3,7 +3,9 @@ from pydantic import BaseModel
 from app.openai_utils import get_chat_response
 from app.vectorstore import embed_and_store_text, query_vectorstore
 from fastapi.responses import Response
+import logging
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 # --- Request/Response Schemas ---
@@ -26,6 +28,7 @@ async def chat(request: ChatRequest):
 
         return {"response": response}
     except Exception as e:
+        logger.error(f"Chat endpoint error: {type(e).__name__}: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
