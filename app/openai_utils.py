@@ -16,7 +16,7 @@ def get_embedding(text: str, model: str = "text-embedding-3-small") -> list:
 
 
 # --- 2. Get chat response from OpenAI ---
-def get_chat_response(user_query: str, context: str, model: str = "gpt-3.5-turbo") -> str:
+def get_chat_response(user_query: str, context: str, model: str = "gpt-5-nano") -> str:
     messages = [
         {"role": "system", "content": f"You are ClayBot, a helpful assistant for Clay Sarte's portfolio site. Use the context below to answer user questions. If the answer is not in the context, say you don't know.\n\nContext:\n{context}"},
         {"role": "user", "content": user_query}

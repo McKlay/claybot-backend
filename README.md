@@ -2,7 +2,7 @@
 
 This is the backend API for **Clay Sarte's portfolio chatbot (ClayBot)** — built using:
 
-- OpenAI GPT-3.5 + Embeddings (`text-embedding-3-small`)
+- OpenAI gpt-5-nano + Embeddings (`text-embedding-3-small`)
 - Supabase with `pgvector` for vector storage & similarity search
 - FastAPI for REST API endpoints
 - Docker for deployment to Render
@@ -20,7 +20,7 @@ Your Text Content → **Embedding Model** (`text-embedding-3-small`)
 #### 2. AT RUNTIME (User asks question):
 User Question → Embed → Vector  
 → Similarity Search in Supabase → Top Matching Chunks  
-→ Combine chunks + user question → GPT-3.5 prompt  
+→ Combine chunks + user question → GPT-5-nano prompt  
 → GPT-3.5 returns natural-language answer
 
 ---
@@ -30,7 +30,7 @@ User Question → Embed → Vector
 - Embeds Markdown project descriptions into vector form
 - Stores in `documents` table using `pgvector` for similarity search
 - Supports `/chat` endpoint for real-time questions
-- Uses OpenAI GPT-3.5 Turbo for answer generation
+- Uses OpenAI gpt-5-nano for answer generation
 - Dockerized for easy deployment via Render
 - CORS-restricted to Netlify frontend (`clay-portfolio.netlify.app`)
 - Includes `/healthz` endpoint for uptime monitoring
@@ -108,7 +108,7 @@ allow_origin_regex=r"https:\/\/clay-portfolio\.netlify\.app"
 | Layer     | Tool                            |
 | --------- | ------------------------------- |
 | Backend   | FastAPI                         |
-| LLM       | OpenAI GPT-3.5 Turbo            |
+| LLM       | OpenAI gpt-5-nano            |
 | Embedding | OpenAI `text-embedding-3-small` |
 | Vector DB | Supabase + pgvector             |
 | Hosting   | Render (Dockerized Web Service) |
